@@ -1,3 +1,8 @@
+[tasks.dev]
+alias = "d"
+description = "Run CLI in dev mode"
+run = "$MISE_PROJECT_ROOT/bin/dev.js"
+
 [tools]
 node = "23"
 pnpm = "latest"
