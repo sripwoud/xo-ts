@@ -1,0 +1,10 @@
+[tools]
+node = "23"
+pnpm = "latest"
+"npm:oclif" = "latest"
+"cargo:convco" = "latest"
+"npm:@biomejs/biome" = "latest"
+hk = "latest"
+dprint = "latest"
+pkl = "latest"
+"npm:typescript" = "latest"
