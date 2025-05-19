@@ -1,0 +1,17 @@
+{
+  "name": "xoswap",
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@exodus/asset-types": "^0.3.0",
+    "@types/bun": "latest"
+  },
+  "dependencies": {
+    "@hazae41/option": "^1.1.4",
+    "@hazae41/result": "^1.3.2"
+  },
+  "private": true,
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

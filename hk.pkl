@@ -9,8 +9,13 @@ local linters  = new Mapping<String, Step> {
     fix = "dprint fmt"
     stage = "*"
   }
-  ["typescript"]  {
+  ["tsc-cli"]  {
     check = "tsc"
+    dir = "pkgs/cli"
+  }
+  ["tsc-xoswap"]  {
+    check = "tsc"
+    dir = "pkgs/xoswap"
   }
 }
 
