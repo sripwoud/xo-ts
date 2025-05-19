@@ -4,6 +4,24 @@ description = "Run CLI in dev mode"
 dir = "pkgs/cli"
 run = "./bin/dev.js"
 
+[tasks.hurl]
+alias = "h"
+description = "Run requests with hurl"
+dir = "pkgs/xoswap"
+run = "hurl --variable app=xoswap-sdk-test test"
+
+[tasks.hurl-test]
+alias = "ht"
+description = "Run hurl tests"
+dir = "pkgs/xoswap"
+run = "hurl --variable app=xoswap-sdk-test --test test "
+
+[tasks.test]
+alias = "t"
+dir = "pkgs/xoswap"
+description = 'Run xoswap bun tests'
+run = "bun test"
+
 [tools]
 node = "23"
 pnpm = "latest"

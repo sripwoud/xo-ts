@@ -1,29 +1,24 @@
 import { Option, type Some } from '@hazae41/option'
-import { Result } from '@hazae41/result'
+import { Err, Ok, type Result } from '@hazae41/result'
+import type { ErrResponse } from './types'
 
 export async function fetchResult<T>(
   url: string,
   method: 'GET' | 'POST' | 'PATCH',
   options: Option<RequestInit>,
-): Promise<Result<T, Error>> {
-  const result = await Result.runAndWrap(async () => {
-    const response = await fetch(url, {
-      method,
-      ...options.getOr({}),
-    })
-
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-
-    // TODO catch
-    // TODO not necessarily json
-    const data = (await response.json()) as unknown as T
-    return data
+): Promise<Result<T, ErrResponse>> {
+  const response = await fetch(url, {
+    method,
+    ...options.getOr({}),
   })
 
-  return result.mapErr((error: unknown) => {
-    // Explicitly cast the error to an Error type
-    return error instanceof Error ? error : new Error(String(error))
-  })
+  // TODO catch
+  // TODO not necessarily json
+  const data = await response.json()
+  if (!response.ok)
+    return Err.create(data as ErrResponse)
+
+  return Ok.new(data as T)
 }
 
 export function buildUrlSearchParams(
