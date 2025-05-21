@@ -1,3 +1,9 @@
+[tasks.build-cli]
+alias = "bc"
+description = "Build CLI"
+dir = "pkgs/cli"
+run = "bun build src --outdir dist --sourcemap=inline --target=bun"
+
 [tasks.dev-cli]
 alias = "dc"
 description = "Run CLI in dev mode"
@@ -6,21 +12,41 @@ run = "./bin/dev.js"
 
 [tasks.hurl]
 alias = "h"
-description = "Run requests with hurl"
-dir = "pkgs/xoswap"
-run = "hurl --variable app=xoswap-sdk-test test"
+description = "Run hurl requests"
+dir = "pkgs/xoswap/test"
+run = 'hurl --variable app=xoswap-sdk-test'
+quiet = true
 
 [tasks.hurl-test]
 alias = "ht"
 description = "Run hurl tests"
-dir = "pkgs/xoswap"
-run = "hurl --variable app=xoswap-sdk-test --test test "
+dir = "pkgs/xoswap/test"
+hide = true
+run = 'hurl --variable app=xoswap-sdk-test --test *.hurl'
 
-[tasks.test]
-alias = "t"
+[tasks.test-cli]
+alias = "tc"
+dir = "pkgs/cli"
+description = "Run CLI tests"
+run = "bun run mocha --forbid-only \"test/**/*.test.ts\""
+
+[tasks.test-xoswap]
+alias = "tx"
 dir = "pkgs/xoswap"
 description = 'Run xoswap bun tests'
 run = "bun test"
+
+[tasks.test-xoswap-watch]
+alias = "tx"
+dir = "pkgs/xoswap"
+description = 'Run xoswap bun tests in watch mode'
+run = "bun test --watch"
+
+[tasks.test]
+alias = "t"
+description = "Run all tests"
+run = "mise run test-*"
+quiet = true
 
 [tools]
 node = "23"

@@ -15,8 +15,7 @@ export async function fetchResult<T>(
   // TODO catch
   // TODO not necessarily json
   const data = await response.json()
-  if (!response.ok)
-    return Err.create(data as ErrResponse)
+  if (!response.ok) return Err.create(data as ErrResponse)
 
   return Ok.new(data as T)
 }

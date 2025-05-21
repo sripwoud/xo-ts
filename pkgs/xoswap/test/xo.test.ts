@@ -1,119 +1,248 @@
-import { afterAll, beforeEach, describe, expect, it, spyOn } from "bun:test";
-import { None } from "@hazae41/option";
+import { None, Option } from '@hazae41/option'
+import { afterAll, beforeEach, describe, expect, it, spyOn } from 'bun:test'
+import type { Asset, Pair, Rate } from 'src'
 
-import { Xo } from "src/xo.js";
+import { Xo } from 'src/xo.js'
 
-const APP_NAME = "xoswap-sdk-test";
-const BASE_URL = "https://test.exodus.io";
-const VERSION = 3;
+const APP_NAME = 'xoswap-sdk-test'
+const BASE_URL = 'https://test.exodus.io'
+const VERSION = 3
 
-describe("Xo", () => {
-  let xo: Xo;
+describe('Xo', () => {
+  let xo: Xo
 
-  const spyFetch = spyOn(globalThis, "fetch");
+  const spyFetch = spyOn(globalThis, 'fetch')
 
   // biome-ignore lint/suspicious/noExplicitAny:
   const mockRes = (res: any) => {
-    spyFetch.mockResolvedValue(new Response(JSON.stringify(res)));
-  };
+    spyFetch.mockResolvedValue(new Response(JSON.stringify(res)))
+  }
 
   beforeEach(() => {
-    xo = new Xo({ appName: APP_NAME, baseUrl: BASE_URL, version: VERSION });
-    spyFetch.mockReset();
-  });
+    xo = new Xo({ appName: APP_NAME, baseUrl: BASE_URL, version: VERSION })
+    spyFetch.mockReset()
+  })
 
   afterAll(() => {
-    spyFetch.mockRestore();
-  });
+    spyFetch.mockRestore()
+  })
 
-  it("get assets", async () => {
-    const expectedAssets = [
-      {
-        id: "ETH",
-        name: "Ethereum",
-        symbol: "ETH",
+  describe('getAssets', async () => {
+    it('should return assets matching query parameters', async () => {
+      const query = 'WXMR'
+      const expectedAssets: Asset[] = [
+        {
+          id: 'WXMRethereum532ACF8B',
+          name: 'Wrapped Monero',
+          network: 'ethereum',
+          decimals: 18,
+          symbol: query,
+          meta: {
+            contractAddress: '0x465e07d6028830124be2e4aa551fbe12805db0f5',
+          },
+          ethereum: {
+            contractAddress: '0x465e07d6028830124be2e4aa551fbe12805db0f5',
+          },
+        },
+      ]
+      mockRes(expectedAssets)
+
+      const ops = Option.wrap({
+        query: Option.wrap(query),
+        limit: new None(),
+        page: new None(),
+        networks: new None(),
+        format: new None(),
+      })
+      const assets = await xo.getAssets(ops)
+
+      expect(assets.isOk()).toBeTrue()
+      expect(assets.getOrThrow()).toEqual(expectedAssets)
+      expect(spyFetch).toHaveBeenCalledTimes(1)
+      expect(spyFetch).toHaveBeenNthCalledWith(
+        1,
+        `${BASE_URL}/v${VERSION}/assets?query=${query}`,
+        { method: 'GET' },
+      )
+    })
+  })
+
+  describe('getAsset', async () => {
+    it('should return a single asset', async () => {
+      const expectedAsset: Asset = {
+        id: 'ETH',
+        name: 'Ethereum',
+        symbol: 'ETH',
         decimals: 18,
-        network: "ethereum",
-      },
-      {
-        id: "USDT",
-        name: "Tether",
-        symbol: "USDT",
-        decimals: 6,
-        network: "ethereum",
-      },
-    ];
+        network: 'ethereum',
+      }
+      mockRes(expectedAsset)
 
-    mockRes(expectedAssets);
+      const assets = await xo.getAsset('ETH')
 
-    const assets = await xo.getAssets(new None());
+      expect(assets.isOk()).toBeTrue()
+      expect(assets.getOrThrow()).toEqual(expectedAsset)
+      expect(spyFetch).toHaveBeenCalledTimes(1)
+      expect(spyFetch).toHaveBeenNthCalledWith(
+        1,
+        `${BASE_URL}/v${VERSION}/assets/ETH`,
+        { method: 'GET' },
+      )
+    })
+  })
 
-    expect(assets.isOk()).toBeTrue();
-    expect(assets.getOrThrow()).toEqual(expectedAssets);
-    expect(spyFetch).toHaveBeenCalledTimes(1);
-    expect(spyFetch.mock.calls[0]).toEqual([
-      `${BASE_URL}/v${VERSION}/assets`,
-      { method: "GET" },
-    ]);
-  });
+  describe('getPair', async () => {
+    it('should return a single pair', async () => {
+      const pairId = 'BTC_ETH'
+      const expectedPair: Pair = {
+        id: 'BTC_ETH',
+        from: 'BTC',
+        to: 'ETH',
+      }
+      mockRes(expectedPair)
 
-  it.todo("get asset", async () => {});
+      const pair = await xo.getPair(pairId)
+      expect(pair.isOk()).toBeTrue()
+      expect(pair.getOrThrow()).toEqual(expectedPair)
+      expect(spyFetch).toHaveBeenCalledTimes(1)
+      expect(spyFetch).toHaveBeenNthCalledWith(
+        1,
+        `${BASE_URL}/v${VERSION}/pairs/${pairId}`,
+        { method: 'GET' },
+      )
+    })
+  })
 
-  it("get pair", async () => {
-    const pairId = "BTC_ETH";
-    const expectedPair = {
-      id: "BTC_ETH",
-      from: "BTC",
-      to: "ETH",
-    };
-    mockRes(expectedPair);
+  describe('getPairs', async () => {
+    it('should return all pairs', async () => {
+      const expectedPairs: Pair[] = [
+        {
+          id: 'BTC_ETH',
+          from: 'BTC',
+          to: 'ETH',
+        },
+        {
+          id: 'ETH_USDT',
+          from: 'ETH',
+          to: 'USDT',
+        },
+      ]
+      mockRes(expectedPairs)
 
-    const pair = await xo.getPair(pairId);
-    expect(pair.isOk()).toBeTrue();
-    expect(pair.getOrThrow()).toEqual(expectedPair);
-    expect(spyFetch).toHaveBeenCalledTimes(1);
-    expect(spyFetch.mock.calls[0]).toEqual([
-      `${BASE_URL}/v${VERSION}/pairs/${pairId}`,
-      { method: "GET" },
-    ]);
-  });
+      const pairs = await xo.getPairs()
 
-  it("gets pairs", async () => {
-    mockRes([
-      {
-        id: "BTC_ETH",
-        from: "BTC",
-        to: "ETH",
-      },
-      {
-        id: "ETH_USDT",
-        from: "ETH",
-        to: "USDT",
-      },
-    ]);
+      expect(
+        pairs.isOkAndSync((pairs) =>
+          [
+            pairs.length === 2,
+            pairs[0]?.id === 'BTC_ETH',
+            pairs[1]?.to === 'USDT',
+          ]
+            .every(Boolean)
+        ),
+      )
+        .toBeTrue()
+      expect(spyFetch).toHaveBeenCalledTimes(1)
+      expect(spyFetch).toHaveBeenNthCalledWith(
+        1,
+        `${BASE_URL}/v${VERSION}/pairs`,
+        { method: 'GET' },
+      )
+    })
+  })
 
-    const pairs = await xo.getPairs();
-    expect(
-      pairs.isOkAndSync((pairs) =>
-        [
-          pairs.length === 2,
-          pairs[0]?.id === "BTC_ETH",
-          pairs[1]?.to === "USDT",
-        ].every(Boolean),
-      ),
-    ).toBeTrue();
-    expect(spyFetch).toHaveBeenCalledTimes(1);
-    expect(spyFetch.mock.calls[0]).toEqual([
-      `${BASE_URL}/v${VERSION}/pairs`,
-      { method: "GET" },
-    ]);
-  });
+  describe('getRates', async () => {
+    it('should return rates', async () => {
+      const pairId = 'BTC_ETH'
+      const expectedRates: [Rate] = [
+        {
+          amount: {
+            assetId: 'ETH',
+            value: 41.20061960723526,
+          },
+          expiry: 1747820930000,
+          id: 'FotH4ox7AEbuOI9n&1QFK*@p8*UMxR',
+          max: {
+            assetId: 'BTC',
+            value: 3.65452229,
+          },
+          min: {
+            assetId: 'BTC',
+            value: 0.00048508,
+          },
+          minerFee: {
+            assetId: 'ETH',
+            value: 0.00033445,
+          },
+          pairId,
+        },
+      ]
+      mockRes(expectedRates)
 
-  it.todo("get rates");
+      const rates = await xo.getRates(pairId)
 
-  it.todo("get order");
+      expect(rates.isOk()).toBeTrue()
+      expect(rates.getOrThrow()[0]).toEqual(expectedRates[0])
+      expect(spyFetch).toHaveBeenCalledTimes(1)
+      expect(spyFetch).toHaveBeenNthCalledWith(
+        1,
+        `${BASE_URL}/v${VERSION}/pairs/${pairId}/rates`,
+        { method: 'GET' },
+      )
+    })
+  })
 
-  it.todo("create order");
+  describe('getOrder', async () => {
+    it('should return a single order', async () => {
+      const orderId = 'AROzE5pqalJ1nVY'
+      const expectedOrder = {
+        amount: {
+          assetId: 'ADA',
+          value: '80.399425',
+        },
+        toAmount: {
+          assetId: 'ONG',
+          value: '128.29640407',
+        },
+        createdAt: '2022-02-03T19:47:13.552Z',
+        fromAddress:
+          'addr1qx6m996k6sh8qut785u80jkljfvsegd7zn38457xs22zkx94k2t4d4pwwpchu0fcwl9dlyjepjsmu98z0tfudq559vvqnu2xhu',
+        fromTransactionId: '',
+        id: 'AROzE5pqalJ1nVY',
+        message: '',
+        pairId: 'ADA_ONG',
+        payInAddress:
+          'DdzFFzCqrhsyrKUEMiGPHQJVgzq7dkihDd1ZmGY9C2jDBJjyL8RwQGrshPy2gZ89JWQj99WurfJnwucwgF7t3gqe8DhpGT9BFgqraAuR',
+        providerOrderId: '',
+        rateId: '',
+        toAddress: 'APS2zJaFxJCKe53FSTeNrhrtCZFt68XEtF',
+        toTransactionId: '',
+        updatedAt: '2022-02-03T19:47:13.552Z',
+        status: 'inProgress',
+        extraFeatures: {
+          stringAmounts: 'true',
+        },
+      }
+      mockRes(expectedOrder)
 
-  it.todo("update order");
-});
+      const order = await xo.getOrder(orderId)
+
+      expect(order.isOk()).toBe(true)
+      expect(order.getOrThrow()).toEqual(expectedOrder)
+      expect(spyFetch).toHaveBeenCalledTimes(1)
+      expect(spyFetch).toHaveBeenNthCalledWith(
+        1,
+        `${BASE_URL}/v${VERSION}/orders/${orderId}`,
+        { method: 'GET' },
+      )
+    })
+  })
+
+  describe('createOrder', async () => {
+    it.todo('should create order')
+  })
+
+  describe('updateOrder', async () => {
+    it.todo('should update order')
+  })
+})
