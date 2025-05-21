@@ -1,15 +1,3 @@
 # xoswap
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-## Development
-
-To run CLI in dev mode:
-
-```sh
-mise r dc
-```
+TS client implementing the API described at [xoswap.com/docs](https://xoswap.com/docs).
