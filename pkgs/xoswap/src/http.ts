@@ -2,12 +2,6 @@ import { Option, type Some } from '@hazae41/option'
 import { Err, Ok, type Result } from '@hazae41/result'
 import type { ErrResponse } from './types'
 
-/**
- * @param url
- * @param method
- * @param options
- * @returns
- */
 export async function fetchResult<T>(
   url: string,
   method: 'GET' | 'POST' | 'PATCH',
