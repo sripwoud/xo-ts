@@ -1,5 +1,12 @@
-import type { AbstractAsset } from '@exodus/asset-types'
+// FIXME this is not mirrored in ExodusOSS and isn't a public package
+// import type { AbstractAsset } from '@exodus/asset-types'
 // TODO: resuse types defined in ExodusMovement/exchange-server
+
+interface AbstractAsset {
+  baseAssetName: string
+  name: string
+  ticker: string
+}
 
 export type AppName = string
 export type BaseUrl = `https://${string}.${string}`
@@ -47,7 +54,7 @@ export interface Asset {
 }
 
 // https://github.com/ExodusMovement/exchange-server/blob/2c0f26815629d2c0533e55ee70f05a1a3bad064e/src/types/index.ts#L101
-enum OrderStatus {
+export enum OrderStatus {
   Awaiting = 'awaiting',
   Complete = 'complete',
   Delayed = 'delayed',

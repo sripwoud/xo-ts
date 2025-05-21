@@ -3,9 +3,12 @@
 **/.DS_Store
 /.idea
 dist
+docs
 tmp
 node_modules
 oclif.manifest.json
 
 pnpm-lock.json
 *.tsbuildinfo
+
+pkgs/cli/.github

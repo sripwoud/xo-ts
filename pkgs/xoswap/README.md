@@ -6,10 +6,10 @@ To install dependencies:
 bun install
 ```
 
-To run:
+## Development
 
-```bash
-bun run index.js
+To run CLI in dev mode:
+
+```sh
+mise r dc
 ```
-
-This project was created using `bun init` in bun v1.2.13. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
