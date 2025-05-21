@@ -1,8 +1,58 @@
+[tasks.build-xoswap-browser-esm]
+dir = "pkgs/xoswap"
+hide = true
+run = "bun build src --entry-naming [name].browser.m[ext] --format esm --minify --outdir dist --root src --sourcemap=inline --target browser"
+
+[tasks.build-xoswap-browser-iife]
+dir = "pkgs/xoswap"
+hide = true
+run = "bun build src --entry-naming [name].browser.iife.[ext] --format iife --minify --root src --outdir dist --sourcemap=inline --target browser"
+
+[tasks.build-xoswap-bun-cjs]
+dir = "pkgs/xoswap"
+hide = true
+run = "bun build src --entry-naming [name].bun.c[ext] --format cjs --minify --outdir dist --sourcemap=inline --root src --target bun"
+
+[tasks.build-xoswap-bun-esm]
+dir = "pkgs/xoswap"
+hide = true
+run = "bun build src --entry-naming [name].bun.m[ext] --format esm --minify --outdir dist --sourcemap=inline --root src --target bun"
+
+[tasks.build-xoswap-node-cjs]
+dir = "pkgs/xoswap"
+hide = true
+run = "bun build src --entry-naming [name].node.c[ext] --format cjs --minify --outdir dist --sourcemap=inline --root src --target node"
+
+[tasks.build-xoswap-node-esm]
+dir = "pkgs/xoswap"
+hide = true
+run = "bun build src --entry-naming [name].node.m[ext] --format esm --minify --outdir dist --sourcemap=inline --root src --target node"
+
+[tasks.build-xoswap-types]
+dir = "pkgs/xoswap"
+hide = true
+run = "tsc --project tsconfig.build.json"
+
+[tasks.build-xoswap]
+alias = 'bx'
+description = "Bundle xoswap pkg"
+run = ["rm -fr pkgs/xoswap/dist", "mise r build-xoswap-*"]
+
 [tasks.build-cli]
 alias = "bc"
 description = "Build CLI"
 dir = "pkgs/cli"
 run = "bun build src --outdir dist --sourcemap=inline --target=bun"
+
+[tasks.build-docs]
+alias = 'bd'
+description = 'Build docs'
+run = "typedoc --githubPages true"
+
+[tasks.serve-docs]
+alias = 'sd'
+description = 'Serve docs'
+run = "serve docs"
 
 [tasks.dev-cli]
 alias = "dc"
@@ -59,3 +109,5 @@ dprint = "latest"
 pkl = "latest"
 "npm:typescript" = "latest"
 bun = "latest"
+"npm:typedoc" = "latest"
+"npm:serve" = "latest"

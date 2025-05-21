@@ -1,0 +1,26 @@
+name: Publish Typedoc to GH Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [
+      typedoc.js,
+      pkgs/**/src/*.ts,
+      **/README.md,
+      .github/workflows/docs.yml,
+    ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bunx typedoc --githubPages true
+      - uses: crazy-max/ghaction-github-pages@v4
+        with:
+          build_dir: docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
