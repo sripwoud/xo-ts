@@ -14,7 +14,6 @@ const entryPoints = fs
 module.exports = {
   entryPoints,
   name: 'xo-ts',
-  entryPointStrategy: 'expand',
   // FIXME
   tsconfig: path.join(__dirname, 'pkgs', 'xoswap', 'tsconfig.json'),
 }
