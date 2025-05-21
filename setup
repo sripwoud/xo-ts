@@ -76,7 +76,7 @@ main() {
   mise install && log "✅ Installed dev tools and runtimes"
   use_convco_as_git_editor_only_on_main
   hk install && log "✅ Configured git hooks"
-  pnpm i && log "✅ Installed node deps"
+  cd ./pkgs/cli && bun i && cd ../xoswap && bun i && log "✅ Installed node deps"
 }
 
 main
