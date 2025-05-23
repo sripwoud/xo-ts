@@ -1,7 +1,7 @@
 import { Select } from '@inkjs/ui'
 import { COLORS } from 'domain.js'
-import type { Asset } from 'domain.js'
 import { Box, Text } from 'ink'
+import type { Asset } from 'xoswap'
 
 interface AssetsTableProps {
   assets: Asset[]

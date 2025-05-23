@@ -2,8 +2,8 @@ import { Some } from '@hazae41/option'
 import { SwapStep } from 'domain.js'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { availableReceiveAssetsAtom, currentStepAtom, receiveAssetAtom, sellAssetAtom } from 'state/swapAtoms'
-import type { Asset } from 'types'
 import { AssetsTable } from 'ui/AssetsTable'
+import type { Asset } from 'xoswap'
 
 export function ReceiveAssetSelect() {
   const assets = useAtomValue(availableReceiveAssetsAtom)

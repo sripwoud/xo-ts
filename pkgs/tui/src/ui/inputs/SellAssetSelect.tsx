@@ -3,8 +3,8 @@ import { SwapStep } from 'domain.js'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { availableSellAssetsAtom, currentStepAtom, receiveAssetAtom, sellAssetAtom } from 'state/swapAtoms'
-import type { Asset } from 'types'
 import { AssetsTable } from 'ui/AssetsTable'
+import type { Asset } from 'xoswap'
 
 export function SellAssetSelect() {
   const assets = useAtomValue(availableSellAssetsAtom)

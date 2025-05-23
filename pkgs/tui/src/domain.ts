@@ -1,9 +1,6 @@
 import type { Option } from '@hazae41/option'
 import type { Asset, Pair, Rate } from 'xoswap'
 
-// Re-export types from xoswap for convenience
-export type { Asset, AssetId, Pair, PairId, Rate } from 'xoswap'
-
 // TUI-specific domain types
 export interface SwapQuote {
   fromAsset: Asset
