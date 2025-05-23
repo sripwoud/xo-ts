@@ -24,9 +24,8 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "src",
     "paths": {
-      "a/*": ["application/*"],
-      "c/*": ["components/*"],
-      "i/*": ["infrastructure/*"]
+      "i/*": ["infrastructure/*"],
+      "s/*": ["state/*"]
     }
   },
   "exclude": ["dist", "node_modules"]

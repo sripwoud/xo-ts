@@ -1,6 +1,6 @@
 import { render } from 'ink'
 import { Provider } from 'jotai'
-import { App } from './components/App.js'
+import { App } from 'ui/App'
 
 render(
   <Provider>
