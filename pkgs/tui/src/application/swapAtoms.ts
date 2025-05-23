@@ -1,7 +1,6 @@
 import { None } from '@hazae41/option'
+import { type SwapState, SwapStep } from 'domain.js'
 import { atom } from 'jotai'
-import type { SwapState } from '../domain.js'
-import { SwapStep } from '../domain.js'
 
 // Initial state for the swap application
 const initialSwapState: SwapState = {
