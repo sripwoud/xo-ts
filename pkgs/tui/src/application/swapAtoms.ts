@@ -1,28 +1,22 @@
+import { None } from '@hazae41/option'
 import { atom } from 'jotai'
-import type { Asset, DemoPaymentData, Pair, SwapQuote, SwapState } from '../domain.js'
+import type { SwapState } from '../domain.js'
 import { SwapStep } from '../domain.js'
 
-// Initial state
+// Initial state for the swap application
 const initialSwapState: SwapState = {
-  // Input state
-  sellAmount: '',
-  sellAsset: null,
-  receiveAsset: null,
-  receiveAddress: '',
-
-  // Data state
+  sellAmount: new None(),
+  sellAsset: new None(),
+  receiveAsset: new None(),
+  receiveAddress: new None(),
   assets: [],
   availablePairs: [],
-  currentQuote: null,
-
-  // UI state
+  currentQuote: new None(),
   currentStep: SwapStep.INPUT_AMOUNT,
   isLoading: false,
-  error: null,
-
-  // Demo state
-  demoDepositAddress: null,
-  demoQrCode: null,
+  error: new None(),
+  demoDepositAddress: new None(),
+  demoQrCode: new None(),
 }
 
 // Base atoms for individual pieces of state
@@ -59,37 +53,24 @@ export const swapStateAtom = atom<SwapState>((get) => ({
 }))
 
 // Derived atoms for validation and UI logic
-export const canProceedToSelectSellAssetAtom = atom((get) => {
-  const sellAmount = get(sellAmountAtom)
-  return sellAmount.length > 0 && !Number.isNaN(Number(sellAmount)) && Number(sellAmount) > 0
-})
+export const canProceedToSelectSellAssetAtom = atom((get) =>
+  get(sellAmountAtom).isSomeAnd(amount => amount.length > 0 && !Number.isNaN(Number(amount)) && Number(amount) > 0)
+)
 
-export const canProceedToSelectReceiveAssetAtom = atom((get) => {
-  const sellAsset = get(sellAssetAtom)
-  return sellAsset !== null
-})
+export const canProceedToSelectReceiveAssetAtom = atom((get) => get(sellAssetAtom).isSome())
 
-export const canProceedToInputAddressAtom = atom((get) => {
-  const receiveAsset = get(receiveAssetAtom)
-  const sellAsset = get(sellAssetAtom)
-  return receiveAsset !== null && sellAsset !== null && receiveAsset.id !== sellAsset.id
-})
+export const canProceedToInputAddressAtom = atom((get) =>
+  get(receiveAssetAtom).zip(get(sellAssetAtom)).isSomeAnd(([receiveAssetValue, sellAssetValue]) =>
+    receiveAssetValue.id !== sellAssetValue.id
+  )
+)
 
-export const canProceedToReviewAtom = atom((get) => {
-  const receiveAddress = get(receiveAddressAtom)
-  return receiveAddress.length > 0
-})
+export const canProceedToReviewAtom = atom((get) => get(receiveAddressAtom).isSomeAnd(address => address.length > 0))
 
 export const canGenerateQuoteAtom = atom((get) => {
-  const sellAsset = get(sellAssetAtom)
-  const receiveAsset = get(receiveAssetAtom)
-  const sellAmount = get(sellAmountAtom)
-
-  return sellAsset !== null
-    && receiveAsset !== null
-    && sellAmount.length > 0
-    && !Number.isNaN(Number(sellAmount))
-    && Number(sellAmount) > 0
+  get(sellAssetAtom).zip(get(receiveAssetAtom)).zip(get(sellAmountAtom)).isSomeAnd(amount =>
+    amount.length > 0 && !Number.isNaN(Number(amount)) && Number(amount) > 0
+  )
 })
 
 // Available assets filtered by current selection
@@ -97,24 +78,18 @@ export const availableSellAssetsAtom = atom((get) => {
   const assets = get(assetsAtom)
   const receiveAsset = get(receiveAssetAtom)
 
-  if (!receiveAsset) return assets
-
-  // Filter out the currently selected receive asset
-  return assets.filter(asset => asset.id !== receiveAsset.id)
+  return receiveAsset.mapOr(assets, selectedAsset => assets.filter(asset => asset.id !== selectedAsset.id))
 })
 
 export const availableReceiveAssetsAtom = atom((get) => {
   const assets = get(assetsAtom)
   const sellAsset = get(sellAssetAtom)
 
-  if (!sellAsset) return assets
-
-  // Filter out the currently selected sell asset
-  return assets.filter(asset => asset.id !== sellAsset.id)
+  return sellAsset.mapOr(assets, selectedAsset => assets.filter(asset => asset.id !== selectedAsset.id))
 })
 
 // Reset action atom
-export const resetSwapAtom = atom(null, (get, set) => {
+export const resetSwapAtom = atom(null, (_get, set) => {
   set(sellAmountAtom, initialSwapState.sellAmount)
   set(sellAssetAtom, initialSwapState.sellAsset)
   set(receiveAssetAtom, initialSwapState.receiveAsset)

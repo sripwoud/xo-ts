@@ -1,6 +1,5 @@
 import { Box, Text } from 'ink'
 import { useAtomValue } from 'jotai'
-import React from 'react'
 import { currentStepAtom, errorAtom, isLoadingAtom } from '../application/swapAtoms.js'
 import { COLORS, SwapStep } from '../domain.js'
 
@@ -26,9 +25,9 @@ export function App() {
       )}
 
       {/* Error display */}
-      {error && (
+      {error.isSome() && (
         <Box marginBottom={1} borderStyle='round' borderColor={COLORS.ERROR} padding={1}>
-          <Text color={COLORS.ERROR}>❌ Error: {error}</Text>
+          <Text color={COLORS.ERROR}>❌ Error: {error.get()}</Text>
         </Box>
       )}
 

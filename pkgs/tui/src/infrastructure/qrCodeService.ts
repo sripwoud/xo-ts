@@ -1,13 +1,13 @@
+import { Result } from '@hazae41/result'
 import QRCode from 'qrcode'
-import type { Asset } from '../domain.js'
 
 export interface QRCodeService {
-  generateQRCode(address: string): Promise<string>
+  generateQRCode(address: string): Promise<Result<string, Error>>
 }
 
 export class ASCIIQRCodeService implements QRCodeService {
-  async generateQRCode(address: string): Promise<string> {
-    try {
+  async generateQRCode(address: string): Promise<Result<string, Error>> {
+    const result = await Result.runAndWrap(async () => {
       // Generate ASCII QR code for terminal display
       const qrString = await QRCode.toString(address, {
         type: 'terminal',
@@ -15,11 +15,20 @@ export class ASCIIQRCodeService implements QRCodeService {
         margin: 1,
       })
       return qrString
-    } catch (error) {
+    })
+
+    return result.mapErr(error => {
       console.error('Failed to generate QR code:', error)
-      // Fallback to simple text representation
-      return `QR Code for: ${address}\n(QR generation failed)`
-    }
+      return error instanceof Error ? error : new Error(String(error))
+    })
+  }
+
+  async generateQRCodeWithFallback(address: string): Promise<string> {
+    const result = await this.generateQRCode(address)
+    return result.mapOr(
+      `QR Code for: ${address}\n(QR generation failed)`,
+      (qrCode: string) => qrCode,
+    )
   }
 }
 
@@ -32,7 +41,7 @@ export const MOCK_DEPOSIT_ADDRESSES = {
   LTC: 'LTC1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
   BCH: 'bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a',
   XRP: 'rN7n7otQDd6FczFgLdSqtcsAUxDkw6fzRH',
-  ADA: 'addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3jcu5d8ps7zex2k2xt3uqxgjqnnj83ws8lhrn648jjxtwq2ytjqp',
+  ADA: 'addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwef74vcwvy22gdx6a',
   DOT: '1FRMM8PEiWXYax7rpS6X4XZX1aAAxSWx1CrKTyrVYhV24fg',
   SOL: '9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM',
 } as const

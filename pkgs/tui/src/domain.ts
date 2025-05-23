@@ -1,3 +1,4 @@
+import type { Option } from '@hazae41/option'
 import type { Asset, Pair, Rate } from '../../../pkgs/xoswap/src/types.js'
 
 // Re-export types from xoswap for convenience
@@ -15,24 +16,24 @@ export interface SwapQuote {
 
 export interface SwapState {
   // Input state
-  sellAmount: string
-  sellAsset: Asset | null
-  receiveAsset: Asset | null
-  receiveAddress: string
+  sellAmount: Option<string>
+  sellAsset: Option<Asset>
+  receiveAsset: Option<Asset>
+  receiveAddress: Option<string>
 
   // Data state
   assets: Asset[]
   availablePairs: Pair[]
-  currentQuote: SwapQuote | null
+  currentQuote: Option<SwapQuote>
 
   // UI state
   currentStep: SwapStep
   isLoading: boolean
-  error: string | null
+  error: Option<string>
 
   // Demo state (for mocked payment flow)
-  demoDepositAddress: string | null
-  demoQrCode: string | null
+  demoDepositAddress: Option<string>
+  demoQrCode: Option<string>
 }
 
 export enum SwapStep {
