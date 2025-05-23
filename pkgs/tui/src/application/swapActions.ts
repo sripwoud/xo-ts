@@ -2,7 +2,7 @@ import { None, Some } from '@hazae41/option'
 import { Err, Ok, Result } from '@hazae41/result'
 import { type Asset, type DemoPaymentData, type Pair, type Rate, type SwapQuote, SwapStep } from 'domain.js'
 import type { Getter, Setter } from 'jotai'
-import { Xo } from '../../../../pkgs/xoswap/src/index.js'
+import { Xo } from 'xoswap'
 
 import { ASCIIQRCodeService, generateMockOrderId, getMockDepositAddress } from 'i/qrCodeService.js'
 import {

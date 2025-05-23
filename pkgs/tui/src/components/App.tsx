@@ -1,7 +1,7 @@
+import { currentStepAtom, errorAtom, isLoadingAtom } from 'a/swapAtoms.js'
+import { COLORS, SwapStep } from 'domain.js'
 import { Box, Text } from 'ink'
 import { useAtomValue } from 'jotai'
-import { currentStepAtom, errorAtom, isLoadingAtom } from '../application/swapAtoms.js'
-import { COLORS, SwapStep } from '../domain.js'
 
 export function App() {
   const currentStep = useAtomValue(currentStepAtom)

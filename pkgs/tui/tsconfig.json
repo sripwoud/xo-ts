@@ -22,9 +22,11 @@
     "noPropertyAccessFromIndexSignature": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["./src/*"]
+      "a/*": ["application/*"],
+      "c/*": ["components/*"],
+      "i/*": ["infrastructure/*"]
     }
   },
   "exclude": ["dist", "node_modules"]
