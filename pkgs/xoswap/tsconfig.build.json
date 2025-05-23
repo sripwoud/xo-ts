@@ -1,11 +1,18 @@
+// tsconfig.build.json
 {
   "extends": "./tsconfig.json",
   "include": ["src"],
   "compilerOptions": {
     "declaration": true,
     "emitDeclarationOnly": true,
+    "moduleResolution": "node",
     "noEmit": false,
-    "outFile": "dist/index.d.ts",
+    "outDir": "dist",
+    "paths": {
+      "http": ["../http"],
+      "types": ["./types"],
+      "xo": ["./xo"]
+    },
     "rootDir": "src"
   }
 }

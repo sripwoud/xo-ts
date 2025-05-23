@@ -1,6 +1,6 @@
 import { None, Option } from '@hazae41/option'
 import { afterAll, beforeEach, describe, expect, it, spyOn } from 'bun:test'
-import { buildUrlSearchParams, fetchResult } from 'src/http.js'
+import { buildUrlSearchParams, fetchResult } from 'http.js'
 
 const URL = 'https://example.com'
 
