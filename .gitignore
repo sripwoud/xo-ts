@@ -2,6 +2,7 @@
 *-error.log
 **/.DS_Store
 /.idea
+.cline
 dist
 docs
 tmp
@@ -11,4 +12,5 @@ oclif.manifest.json
 pnpm-lock.json
 *.tsbuildinfo
 
+.vscode
 pkgs/cli/.github
