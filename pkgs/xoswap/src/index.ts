@@ -1,2 +1,2 @@
-export * from 'src/types'
-export { Xo } from 'src/xo'
+export * from './types'
+export { Xo } from './xo'

@@ -1,8 +1,7 @@
 import { None, Option } from '@hazae41/option'
 import { afterAll, beforeEach, describe, expect, it, spyOn } from 'bun:test'
-import type { Asset, Pair, Rate } from 'src'
-
-import { Xo } from 'src/xo.js'
+import type { Asset, Pair, Rate } from 'types.js'
+import { Xo } from 'xo.js'
 
 const APP_NAME = 'xoswap-sdk-test'
 const BASE_URL = 'https://test.exodus.io'
