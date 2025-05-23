@@ -1,6 +1,45 @@
 import { None } from '@hazae41/option'
-import { type SwapState, SwapStep } from 'domain.js'
+import { type Asset, type SwapState, SwapStep } from 'domain.js'
 import { atom } from 'jotai'
+
+// Mock data for development
+const mockAssets: Asset[] = [
+  {
+    id: 'btc',
+    name: 'Bitcoin',
+    symbol: 'BTC',
+    network: 'Bitcoin',
+    decimals: 8,
+  },
+  {
+    id: 'eth',
+    name: 'Ethereum',
+    symbol: 'ETH',
+    network: 'Ethereum',
+    decimals: 18,
+  },
+  {
+    id: 'usdc',
+    name: 'USD Coin',
+    symbol: 'USDC',
+    network: 'Ethereum',
+    decimals: 6,
+  },
+  {
+    id: 'usdt',
+    name: 'Tether',
+    symbol: 'USDT',
+    network: 'Ethereum',
+    decimals: 6,
+  },
+  {
+    id: 'sol',
+    name: 'Solana',
+    symbol: 'SOL',
+    network: 'Solana',
+    decimals: 9,
+  },
+]
 
 // Initial state for the swap application
 const initialSwapState: SwapState = {
@@ -8,7 +47,7 @@ const initialSwapState: SwapState = {
   sellAsset: new None(),
   receiveAsset: new None(),
   receiveAddress: new None(),
-  assets: [],
+  assets: mockAssets, // Start with mock data
   availablePairs: [],
   currentQuote: new None(),
   currentStep: SwapStep.INPUT_AMOUNT,
